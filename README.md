@@ -1,3 +1,3 @@
 # flutter_what_i_learned
 
-A new Flutter project.
+Simple Pomodoro App built with Nico쌤 in [NomadCoders](https://nomadcoders.co/flutter-for-beginners/)
