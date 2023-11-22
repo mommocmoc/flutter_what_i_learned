@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -9,10 +10,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static int defaultSeconds = 1500;
+  final player = AudioPlayer();
+  static int defaultSeconds = 3;
   int totalSeconds = defaultSeconds;
   int totalPomodoros = 0;
   bool isTimerRunning = false;
+  bool isAudioLoaded = false;
   late Timer timer;
 
   onTick(Timer timer) {
@@ -22,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         totalPomodoros++;
         isTimerRunning = false;
         totalSeconds = defaultSeconds;
+        player.resume();
       });
     } else {
       setState(() {
@@ -30,8 +34,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  LoadAudioAsset() async {
+    if (!isAudioLoaded) {
+      return await player
+          .setSource(AssetSource('audio/timer-done.wav'))
+          .then((value) => isAudioLoaded = true);
+    }
+  }
+
   onStartPressed() {
     timer = Timer.periodic(const Duration(seconds: 1), onTick);
+    LoadAudioAsset();
     setState(() {
       isTimerRunning = true;
     });
@@ -49,6 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isTimerRunning = false;
       totalSeconds = defaultSeconds;
+    });
+  }
+
+  onResetPomodoroPressed() {
+    setState(() {
+      totalPomodoros = 0;
     });
   }
 
@@ -135,6 +154,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
+                        totalPomodoros > 0
+                            ? IconButton(
+                                onPressed: onResetPomodoroPressed,
+                                icon: const Icon(Icons.replay),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .color,
+                                iconSize: 20,
+                              )
+                            : const Text(""),
                       ],
                     ),
                   ),
