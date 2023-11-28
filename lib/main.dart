@@ -28,15 +28,68 @@ class _MainAppState extends State<MainApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Hello Stateful Widget!'),
-              Text("$counter"),
-              IconButton(
-                onPressed: onPressed,
-                icon: const Icon(Icons.add_outlined),
-              )
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.cyan,
+                ),
+                child: const Text('Provider Essential!'),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  color: Colors.deepPurple,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "$counter",
+                      style: const TextStyle(
+                        fontSize: 50,
+                      ),
+                    ),
+                    FloatingActionButton.large(
+                      onPressed: onPressed,
+                      child: const Text("Increment"),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              CounterB(counter: counter)
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CounterB extends StatelessWidget {
+  const CounterB({
+    super.key,
+    required this.counter,
+  });
+
+  final int counter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Colors.amber,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("$counter"),
+          const Text("Sibling"),
+        ],
       ),
     );
   }
