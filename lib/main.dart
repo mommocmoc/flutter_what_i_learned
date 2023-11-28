@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         age: 5,
       ),
       child: MaterialApp(
-        title: 'Provider 04',
+        title: 'Provider 05',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -36,7 +36,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Provider 04"),
+        title: const Text("Provider 05"),
       ),
       body: Center(
         child: Column(
@@ -44,7 +44,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "-name : ${Provider.of<Dog>(context).name}",
+              "-name : ${context.watch<Dog>().name}",
               style: const TextStyle(
                 fontSize: 20,
               ),
@@ -68,7 +68,7 @@ class BreedAndAge extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "- breed : ${Provider.of<Dog>(context).breed}",
+          "- breed : ${context.select<Dog, String>((dog) => dog.breed)}",
           style: const TextStyle(fontSize: 20),
         ),
         const SizedBox(
@@ -88,14 +88,14 @@ class Age extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "- age : ${Provider.of<Dog>(context).age}",
+          "- age : ${context.select<Dog, int>((dog) => dog.age)}",
           style: const TextStyle(fontSize: 20),
         ),
         const SizedBox(
           height: 10,
         ),
         ElevatedButton(
-          onPressed: Provider.of<Dog>(context).grow,
+          onPressed: context.read<Dog>().grow,
           child: const Text("Grow!"),
         )
       ],
