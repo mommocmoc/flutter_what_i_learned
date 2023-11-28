@@ -8,36 +8,41 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _dog = Dog(
+    name: "Dccow",
+    breed: "Dowwow",
+    age: 5,
+  );
+
+  @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Dog>(
-          create: (context) => Dog(
-            name: "Dccow",
-            breed: "Dowwow",
-            age: 5,
-          ),
-        ),
-        StreamProvider(
-          create: (context) {
-            return context.read<Dog>().bark();
-          },
-          initialData: "Bark 0",
-        )
-      ],
-      child: MaterialApp(
-        title: 'Provider 12 - anonymous route',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const MyHomePage(),
+    return MaterialApp(
+      title: 'Provider 13 - Named route',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      routes: {
+        '/': (context) => ChangeNotifierProvider.value(
+            value: _dog, child: const MyHomePage()),
+        '/doginfo': (context) => ChangeNotifierProvider.value(
+            value: _dog, child: const DogInfoScreen()),
+      },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _dog.dispose();
   }
 }
 
@@ -48,7 +53,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Provider 12 - anonymous route"),
+        title: const Text("Provider 13 - Named route"),
       ),
       body: Center(
         child: Column(
@@ -61,12 +66,10 @@ class MyHomePage extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return ChangeNotifierProvider.value(
-                      value: context.read<Dog>(),
-                      child: const DogInfoScreen(),
-                    );
-                  }));
+                  Navigator.pushNamed(
+                    context,
+                    '/doginfo',
+                  );
                 },
                 child: const Text("Dog Info")),
             const SizedBox(
@@ -80,7 +83,6 @@ class MyHomePage extends StatelessWidget {
               onPressed: context.read<Dog>().grow,
               child: const Text("Grow!"),
             ),
-            Text("BarkBark ! ${context.watch<String>()}"),
           ],
         ),
       ),
