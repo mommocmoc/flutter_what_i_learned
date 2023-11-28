@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_what_i_learned/screens/dog_info_screen.dart';
 import 'package:provider/provider.dart';
 import 'models/dog.dart';
+import 'screens/dog_info_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'Provider 07',
+        title: 'Provider 12 - anonymous route',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -46,73 +48,42 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Provider 07"),
+        title: const Text("Provider 12 - anonymous route"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "-name : ${context.watch<Dog>().name}",
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
+            const Icon(Icons.pets),
             const SizedBox(
               height: 10,
             ),
-            const BreedAndAge(),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return ChangeNotifierProvider.value(
+                      value: context.read<Dog>(),
+                      child: const DogInfoScreen(),
+                    );
+                  }));
+                },
+                child: const Text("Dog Info")),
+            const SizedBox(
+              height: 10,
+            ),
+            Text("Age : ${context.watch<Dog>().age}"),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              onPressed: context.read<Dog>().grow,
+              child: const Text("Grow!"),
+            ),
+            Text("BarkBark ! ${context.watch<String>()}"),
           ],
         ),
       ),
-    );
-  }
-}
-
-class BreedAndAge extends StatelessWidget {
-  const BreedAndAge({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "- breed : ${context.select<Dog, String>((dog) => dog.breed)}",
-          style: const TextStyle(fontSize: 20),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        const Age(),
-      ],
-    );
-  }
-}
-
-class Age extends StatelessWidget {
-  const Age({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "- age : ${context.select<Dog, int>((dog) => dog.age)}",
-          style: const TextStyle(fontSize: 20),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ElevatedButton(
-          onPressed: context.read<Dog>().grow,
-          child: const Text("Grow!"),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(context.watch<String>())
-      ],
     );
   }
 }
