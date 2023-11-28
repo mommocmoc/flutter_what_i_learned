@@ -15,4 +15,15 @@ class Dog with ChangeNotifier {
     notifyListeners();
     print(age);
   }
+
+  Stream<String> bark() async* {
+    for (var i = 0; i < age; i++) {
+      await Future.delayed(
+        const Duration(seconds: 2),
+      );
+      var age = i + 1;
+      print("Bark $age");
+      yield "Bark $age";
+    }
+  }
 }

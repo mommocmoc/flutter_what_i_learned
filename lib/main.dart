@@ -11,14 +11,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Dog>(
-      create: (context) => Dog(
-        name: "Cow",
-        breed: "Cowwow",
-        age: 5,
-      ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Dog>(
+          create: (context) => Dog(
+            name: "Dccow",
+            breed: "Dowwow",
+            age: 5,
+          ),
+        ),
+        StreamProvider(
+          create: (context) {
+            return context.read<Dog>().bark();
+          },
+          initialData: "Bark 0",
+        )
+      ],
       child: MaterialApp(
-        title: 'Provider 05',
+        title: 'Provider 07',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -36,7 +46,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Provider 05"),
+        title: const Text("Provider 07"),
       ),
       body: Center(
         child: Column(
@@ -97,7 +107,11 @@ class Age extends StatelessWidget {
         ElevatedButton(
           onPressed: context.read<Dog>().grow,
           child: const Text("Grow!"),
-        )
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(context.watch<String>())
       ],
     );
   }
